@@ -59,7 +59,7 @@ export default function Signup() {
       border: "1px solid #ccc",
       borderRadius: "5px",
       fontSize: "14px",
-      background: "#fff",
+      background: "blue",
     },
     button: {
       width: "100%",
