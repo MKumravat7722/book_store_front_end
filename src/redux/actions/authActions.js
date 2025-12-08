@@ -9,7 +9,7 @@ import {
   logout as logoutAction 
 } from '../slices/authSlice';
 
-const BASE_API_URL = 'http://localhost:3000';
+const BASE_API_URL = 'https://bookstore-api-1-zrst.onrender.com';
 
 const storeAuthData = (user, token) => {
   localStorage.setItem('user', JSON.stringify(user));

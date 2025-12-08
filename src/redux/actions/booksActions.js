@@ -4,7 +4,7 @@ import {
   commentOnBookSuccess
 } from '../slices/booksSlice';
 
-const BASE_API_URL = 'http://localhost:3000';
+const BASE_API_URL = 'https://bookstore-api-1-zrst.onrender.com';
 const getToken = () => localStorage.getItem('token');
 
 export const fetchBooks = () => async (dispatch) => {
