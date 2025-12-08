@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks, fetchMyBooks, createBook, addComment } from "../redux/actions/booksActions";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/actions/authActions";
+import "./BookList.css";
 
 export default function BookList() {
   const dispatch = useDispatch();
@@ -40,40 +41,42 @@ export default function BookList() {
     setComments((prev) => ({ ...prev, [bookId]: value }));
   };
 
-  if (loading) return <p style={{ textAlign: "center", color: "gray" }}>Loading books...</p>;
-  if (error) return <p style={{ textAlign: "center", color: "red" }}>{error}</p>;
+  if (loading) return <p className="booklist-loading">Loading books...</p>;
+  if (error) return <p className="booklist-error">{error}</p>;
 
   return (
-    <div style={styles.container}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={styles.heading}>Welcome, {user.name}</h2>
-        <button style={styles.logoutButton} onClick={handleLogout}>Logout</button>
+    <div className="booklist-container">
+      <div className="booklist-header">
+        <h2 className="booklist-heading">Welcome, {user.name}</h2>
+        <button className="booklist-logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
       {user.role === "author" && (
-        <div style={styles.formBox}>
-          <h3 style={{ marginBottom: "10px" }}>Create a new book</h3>
+        <div className="booklist-form-box">
+          <h3 className="booklist-form-title">Create a new book</h3>
           <form onSubmit={handleCreateBook}>
             <input
               type="text"
               placeholder="Book title"
               value={newBook.title}
               onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-              style={styles.input}
+              className="booklist-input"
               required
             />
             <textarea
               placeholder="Book description"
               value={newBook.description}
               onChange={(e) => setNewBook({ ...newBook, description: e.target.value })}
-              style={styles.input}
+              className="booklist-input booklist-textarea"
               required
             />
             <textarea
               placeholder="Book content"
               value={newBook.content}
               onChange={(e) => setNewBook({ ...newBook, content: e.target.value })}
-              style={styles.input}
+              className="booklist-input booklist-textarea"
               required
             />
             <input
@@ -81,45 +84,52 @@ export default function BookList() {
               placeholder="Publish Date"
               value={newBook.published_at || ""}
               onChange={(e) => setNewBook({ ...newBook, published_at: e.target.value })}
-              style={styles.input}
+              className="booklist-input"
             />
-            <button type="submit" style={styles.button}>Create Book</button>
+            <button type="submit" className="booklist-btn">
+              Create Book
+            </button>
           </form>
         </div>
       )}
 
       <div>
-        <h3 style={{ marginBottom: "15px" }}>Books</h3>
+        <h3 className="booklist-section-title">Books</h3>
         {books.map((book) => (
-          <div key={book.id} style={styles.bookCard}>
-            <h4 style={styles.bookTitle}>{book.title}</h4>
-            <p style={styles.bookDesc}><strong>Description:</strong> {book.description}</p>
-            <p style={styles.bookDesc}><strong>Content:</strong> {book.content}</p>
+          <div key={book.id} className="book-card">
+            <h4 className="book-title">{book.title}</h4>
+            <p className="book-text">
+              <strong>Description:</strong> {book.description}
+            </p>
+            <p className="book-text">
+              <strong>Content:</strong> {book.content}
+            </p>
             {book.published_at && (
-              <p style={styles.bookDesc}>
-                <strong>Published At:</strong> {new Date(book.published_at).toLocaleDateString()}
+              <p className="book-text">
+                <strong>Published At:</strong>{" "}
+                {new Date(book.published_at).toLocaleDateString()}
               </p>
             )}
-            <p style={styles.author}>By {book.author_name}</p>
+            <p className="book-author">By {book.author_name}</p>
 
-            <div style={styles.commentsBox}>
-              <h5 style={{ marginBottom: "5px" }}>Comments</h5>
+            <div className="comments-box">
+              <h5 className="comments-title">Comments</h5>
               {book.comments?.map((c) => (
-                <p key={c.id} style={styles.commentText}>
-                  <span style={styles.commentUser}>{c.user_name}:</span> {c.body}
+                <p key={c.id} className="comment-text">
+                  <span className="comment-user">{c.user_name}:</span> {c.body}
                 </p>
               ))}
-              <div style={styles.commentRow}>
+              <div className="comment-row">
                 <input
                   type="text"
                   placeholder="Add a comment..."
                   value={comments[book.id] || ""}
                   onChange={(e) => handleInputChange(book.id, e.target.value)}
-                  style={styles.commentInput}
+                  className="comment-input"
                 />
                 <button
                   onClick={() => handleAddComment(book.id)}
-                  style={styles.buttonSmall}
+                  className="comment-btn"
                 >
                   Post
                 </button>
@@ -130,92 +140,5 @@ export default function BookList() {
       </div>
     </div>
   );
-} 
- 
- const styles = {
-    container: {
-      maxWidth: "800px",
-      margin: "0 auto",
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
-    heading: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "20px",
-      color: "#333",
-    },
-    logoutButton: {
-      padding: "8px 12px",
-      background: "#dc3545",
-      color: "#fff",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-      float: "right",
-    },
-    formBox: {
-      background: "#fff",
-      padding: "20px",
-      borderRadius: "8px",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-      marginBottom: "30px",
-    },
-    input: {
-      width: "100%",
-      padding: "10px",
-      marginBottom: "10px",
-      border: "1px solid #ccc",
-      borderRadius: "5px",
-      fontSize: "14px",
-    },
-    button: {
-      padding: "10px 15px",
-      background: "#007BFF",
-      color: "#fff",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-    },
-    buttonSmall: {
-      padding: "6px 12px",
-      background: "#28a745",
-      color: "#fff",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      fontSize: "12px",
-    },
-    bookCard: {
-      background: "#f9f9f9",
-      padding: "15px",
-      borderRadius: "8px",
-      border: "1px solid #ddd",
-      marginBottom: "20px",
-    },
-    bookTitle: {
-      fontSize: "18px",
-      fontWeight: "bold",
-      color: "#222",
-      marginBottom: "5px",
-    },
-    bookDesc: { fontSize: "14px", color: "#555", marginBottom: "5px" },
-    author: { fontSize: "12px", color: "#666" },
-    commentsBox: {
-      marginTop: "10px",
-      padding: "10px",
-      background: "#fff",
-      border: "1px solid #eee",
-      borderRadius: "6px",
-    },
-    commentText: { fontSize: "13px", margin: "4px 0", color: "#333" },
-    commentUser: { fontWeight: "bold", marginRight: "5px" },
-    commentInput: {
-      flex: 1,
-      padding: "8px",
-      border: "1px solid #ccc",
-      borderRadius: "5px",
-      fontSize: "13px",
-    },
-    commentRow: { display: "flex", gap: "8px", marginTop: "8px" },
-  };
+}
+
